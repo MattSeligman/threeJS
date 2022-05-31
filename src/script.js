@@ -16,19 +16,57 @@ const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
 /**
+ * Mesh Positions
+ */
+// mesh.position.x = 1;
+// mesh.position.y = 1;
+// mesh.position.z = 1;
+mesh.position.set(1, 1, 1);
+
+/**
+ * Mesh Scale
+ */
+// mesh.scale.x = 1;
+// mesh.scale.y = 1;
+// mesh.scale.z = 1;
+mesh.scale.set(1, 1, 1);
+
+/**
+ * Mesh Rotation
+ */
+mesh.rotation.reorder('YXZ'); /* Control Order to prevent order issues */
+mesh.rotation.y = Math.PI * 0.25;
+mesh.rotation.x = Math.PI * 0.25;
+mesh.rotation.z = Math.PI * 0.25;
+
+/*
+ * Axes helper
+ */
+const axisDistance = 2;
+const axesHelper = new THREE.AxesHelper(axisDistance);
+scene.add(axesHelper);
+
+/**
  * Sizes
  */
 const sizes = {
-	width: 800,
-	height: 600,
+	width: window.innerWidth - 15,
+	height: window.innerHeight - 95,
 };
 
 /**
  * Camera
  */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
-camera.position.z = 3;
 scene.add(camera);
+
+/**
+ *  Camera Positions
+ */
+camera.position.z = 4;
+camera.position.y = 1;
+camera.position.x = 1;
+camera.lookAt(mesh.position);
 
 /**
  * Renderer
