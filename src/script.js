@@ -89,10 +89,15 @@ const keyframe = () => {
 	// Update Objects
 	// group.position.z -= 0.01;
 	// group.position.x += 0.01;
-	group.rotation.y = Math.sin(elapsedTime);
-	group.position.y = Math.sin(elapsedTime);
-	group.position.x = Math.cos(elapsedTime);
-	// cube1.rotation.y = deltaTime * Math.PI * 0.00005;
+
+	// group.rotation.y = Math.sin(elapsedTime);
+	// group.position.y = Math.sin(elapsedTime);
+	// group.position.x = Math.cos(elapsedTime);
+
+	camera.rotation.y = Math.sin(elapsedTime);
+	camera.position.y = Math.sin(elapsedTime);
+	camera.position.x = Math.cos(elapsedTime);
+	camera.lookAt(group.position);
 
 	// Render Scene
 	renderer.render(scene, camera);
