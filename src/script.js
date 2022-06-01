@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -79,6 +80,13 @@ renderer.setSize(sizes.width, sizes.height);
 const clock = new THREE.Clock();
 
 /**
+ * GSAP Examples
+ */
+/* Object Animating (Mesh/Group), Object including destination.  */
+gsap.to(group.position, { duration: 1, delay: 1, x: 2 });
+gsap.to(group.position, { duration: 1, delay: 2, x: 0 });
+
+/**
  * Animations
  */
 
@@ -94,9 +102,9 @@ const keyframe = () => {
 	// group.position.y = Math.sin(elapsedTime);
 	// group.position.x = Math.cos(elapsedTime);
 
-	camera.rotation.y = Math.sin(elapsedTime);
-	camera.position.y = Math.sin(elapsedTime);
-	camera.position.x = Math.cos(elapsedTime);
+	// camera.rotation.y = Math.sin(elapsedTime);
+	// camera.position.y = Math.sin(elapsedTime);
+	// camera.position.x = Math.cos(elapsedTime);
 	camera.lookAt(group.position);
 
 	// Render Scene
