@@ -47,7 +47,7 @@ scene.add(axesHelper);
  * Sizes
  */
 const sizes = {
-	width: window.innerWidth - 15,
+	width: window.innerWidth / 1.02,
 	height: window.innerHeight - 95,
 };
 
@@ -72,4 +72,32 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
-renderer.render(scene, camera);
+
+/**
+ *  Clock
+ */
+const clock = new THREE.Clock();
+
+/**
+ * Animations
+ */
+
+const keyframe = () => {
+	// Clock
+	const elapsedTime = clock.getElapsedTime();
+
+	// Update Objects
+	// group.position.z -= 0.01;
+	// group.position.x += 0.01;
+	group.rotation.y = Math.sin(elapsedTime);
+	group.position.y = Math.sin(elapsedTime);
+	group.position.x = Math.cos(elapsedTime);
+	// cube1.rotation.y = deltaTime * Math.PI * 0.00005;
+
+	// Render Scene
+	renderer.render(scene, camera);
+
+	window.requestAnimationFrame(keyframe);
+};
+
+keyframe();
