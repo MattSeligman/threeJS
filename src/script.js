@@ -70,16 +70,21 @@ const sizes = {
 /**
  * Camera
  */
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-// const aspectRatio = sizes.width / sizes.height;
-// const camera = new THREE.OrthographicCamera(
-// 	- 1 * aspectRatio,
-// 	1 * aspectRatio,
-// 	1,
-// 	- 1,
-// 	0.1,
-// 	100
-// );
+// const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+const aspectRatio = sizes.width / sizes.height;
+
+const orthCamSettings = {
+	left: -1 * aspectRatio,
+	right: 1 * aspectRatio,
+	top: 1,
+	bottom: -1,
+	near: 0.1,
+	far: 100
+}
+
+const camera = new THREE.OrthographicCamera(orthCamSettings.left, orthCamSettings.right, orthCamSettings.top, orthCamSettings.bottom, orthCamSettings.near, orthCamSettings.far);
+
+
 
 scene.add(camera);
 
@@ -120,52 +125,69 @@ controls.enableDamping = true;
 controls.update();
 
 /**
- * Animations
+ * Keyframe Animations
  */
-
 const keyframe = () => {
-	// Clock
+	/**
+	 * Clock to determine time between frames
+	 */
 	const elapsedTime = clock.getElapsedTime();
 
-	// Update Objects
+	/**
+	 * Object Animation Updates
+	 */
+	// # Adjust position incrementally per frame
 	// group.position.z -= 0.01;
 	// group.position.x += 0.01;
 
+	// # Rotation of Group using Math.sin & Math.cos
 	// group.rotation.y = Math.sin(elapsedTime);
 	// group.position.y = Math.sin(elapsedTime);
 	// group.position.x = Math.cos(elapsedTime);
 
+	// # Rotation of Camera using Math.sin & Math.cos
 	// camera.rotation.y = Math.sin(elapsedTime);
 	// camera.position.y = Math.sin(elapsedTime);
 	// camera.position.x = Math.cos(elapsedTime);
 
-	// Update Camera
-
+	/**
+	 * Update Camera Position
+	 */
 	// View left and right objects
 	// camera.position.x = cursor.x * 10
 	// camera.position.y = cursor.y * 10
 
-	// Update Controls
+	/** Update Object Controls */	
 	controls.update();
 
-	// Rotate Objects
 	/**
-	 * Auto Animated
+	 * Animate Rotating Objects
 	 */
-	// camera.position.x = Math.sin(elapsedTime) * 10;
-	// camera.position.z = Math.cos(elapsedTime) * 10;
 
+	// # Animate based on Camera Position equaling the Math.sin & Math.cos of the elapsed time multiplied by the distance
+	// camera.position.x = Math.sin(elapsedTime) * 5;
+	// camera.position.z = Math.cos(elapsedTime) * 5;
+
+	// # Animate Based on Cursor Position
 	// camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5;
 	// camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5;
 	// camera.position.y = cursor.y * 5;
 
+	/**
+	 *  Camera Look at the Group
+	 */
 	camera.lookAt(group.position);
+
+	/**
+	 * Alternative camera.lookAt (If not using Group or using Cursor)
+	 */
 	// camera.lookAt(new THREE.Vector3(0, 0, 0));
 	// camera.lookAt(new THREE.Vector3(cursor.x, cursor.y, 0));
 
-	// Render Scene
+	/**
+	 * Render the Scene & Camera
+	 */
 	renderer.render(scene, camera);
-
 	window.requestAnimationFrame(keyframe);
 };
 
