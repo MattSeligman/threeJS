@@ -55,15 +55,25 @@ const sizes = {
 /**
  * Camera
  */
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+// const aspectRatio = sizes.width / sizes.height;
+// const camera = new THREE.OrthographicCamera(
+// 	- 1 * aspectRatio,
+// 	1 * aspectRatio,
+// 	1,
+// 	- 1,
+// 	0.1,
+// 	100
+// );
+
 scene.add(camera);
 
 /**
  *  Camera Positions
  */
 camera.position.z = 5;
-camera.position.y = 1;
-camera.position.x = 0;
+// camera.position.y = 1;
+// camera.position.x = 0;
 // camera.lookAt(group);
 
 /**
@@ -83,8 +93,8 @@ const clock = new THREE.Clock();
  * GSAP Examples
  */
 /* Object Animating (Mesh/Group), Object including destination.  */
-gsap.to(group.position, { duration: 1, delay: 1, x: 2 });
-gsap.to(group.position, { duration: 1, delay: 2, x: 0 });
+// gsap.to(group.position, { duration: 1, delay: 1, x: 2 });
+// gsap.to(group.position, { duration: 1, delay: 2, x: 0 });
 
 /**
  * Animations
