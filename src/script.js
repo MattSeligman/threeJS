@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import gsap from 'gsap';
 
 /**
@@ -111,6 +112,13 @@ const clock = new THREE.Clock();
 // gsap.to(group.position, { duration: 1, delay: 2, x: 0 });
 
 /**
+ * Controls
+ */
+const controls = new OrbitControls(camera, canvas);
+controls.target.y = 2;
+controls.update();
+
+/**
  * Animations
  */
 
@@ -143,14 +151,13 @@ const keyframe = () => {
 	// camera.position.x = Math.sin(elapsedTime) * 10;
 	// camera.position.z = Math.cos(elapsedTime) * 10;
 
-	camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5;
-	camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5;
-	camera.position.y = cursor.y * 5;
+	// camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5;
+	// camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5;
+	// camera.position.y = cursor.y * 5;
 
 	camera.lookAt(group.position);
 	// camera.lookAt(new THREE.Vector3(0, 0, 0));
 	// camera.lookAt(new THREE.Vector3(cursor.x, cursor.y, 0));
-
 
 	// Render Scene
 	renderer.render(scene, camera);
