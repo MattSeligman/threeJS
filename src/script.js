@@ -11,7 +11,7 @@ const cursor = {
 }
 window.addEventListener('mousemove', (event) => {
 	cursor.x = event.clientX / sizes.width - 0.5;
-	cursor.y = event.clientY / sizes.height - 0.5;
+	cursor.y = -( event.clientY / sizes.height - 0.5);
 
 	// console.log(`Cursor: X: ${cursor.x}, Y: ${cursor.y}`);
 })
@@ -129,6 +129,10 @@ const keyframe = () => {
 	// camera.rotation.y = Math.sin(elapsedTime);
 	// camera.position.y = Math.sin(elapsedTime);
 	// camera.position.x = Math.cos(elapsedTime);
+
+	// Update Camera
+	camera.position.x = cursor.x * 10
+	camera.position.y = cursor.y * 10
 	camera.lookAt(group.position);
 
 	// Render Scene
