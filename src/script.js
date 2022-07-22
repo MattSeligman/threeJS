@@ -116,6 +116,7 @@ const clock = new THREE.Clock();
  */
 const controls = new OrbitControls(camera, canvas);
 controls.target.y = 2;
+controls.enableDamping = true;
 controls.update();
 
 /**
@@ -143,6 +144,9 @@ const keyframe = () => {
 	// View left and right objects
 	// camera.position.x = cursor.x * 10
 	// camera.position.y = cursor.y * 10
+
+	// Update Controls
+	controls.update();
 
 	// Rotate Objects
 	/**
