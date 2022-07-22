@@ -131,9 +131,25 @@ const keyframe = () => {
 	// camera.position.x = Math.cos(elapsedTime);
 
 	// Update Camera
-	camera.position.x = cursor.x * 10
-	camera.position.y = cursor.y * 10
+
+	// View left and right objects
+	// camera.position.x = cursor.x * 10
+	// camera.position.y = cursor.y * 10
+
+	// Rotate Objects
+	/**
+	 * Auto Animated
+	 */
+	// camera.position.x = Math.sin(elapsedTime) * 10;
+	// camera.position.z = Math.cos(elapsedTime) * 10;
+
+	camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5;
+	camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5;
+	
 	camera.lookAt(group.position);
+	// camera.lookAt(new THREE.Vector3(0, 0, 0));
+	// camera.lookAt(new THREE.Vector3(cursor.x, cursor.y, 0));
+
 
 	// Render Scene
 	renderer.render(scene, camera);
