@@ -2,6 +2,20 @@ import './style.css';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
+/**
+ * Cursor
+ */
+const cursor = {
+	x: 0,
+	y: 0
+}
+window.addEventListener('mousemove', (event) => {
+	cursor.x = event.clientX / sizes.width - 0.5;
+	cursor.y = event.clientY / sizes.height - 0.5;
+
+	// console.log(`Cursor: X: ${cursor.x}, Y: ${cursor.y}`);
+})
+
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
