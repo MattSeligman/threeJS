@@ -145,7 +145,8 @@ const keyframe = () => {
 
 	camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 5;
 	camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 5;
-	
+	camera.position.y = cursor.y * 5;
+
 	camera.lookAt(group.position);
 	// camera.lookAt(new THREE.Vector3(0, 0, 0));
 	// camera.lookAt(new THREE.Vector3(cursor.x, cursor.y, 0));
