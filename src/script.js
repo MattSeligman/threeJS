@@ -63,28 +63,47 @@ scene.add(axesHelper);
  * Sizes
  */
 const sizes = {
-	width: window.innerWidth / 1.02,
-	height: window.innerHeight - 95,
+	width: window.innerWidth,
+	height: window.innerHeight,
 };
+
+/**
+ * Update's the Sizes on Viewport Resize
+ */
+window.addEventListener('resize', (event) => {
+
+	// Update Sizes
+	sizes.width = window.innerWidth;
+	sizes.height = window.innerHeight;
+
+	
+	// Update Camera's Aspect Ratio
+	camera.aspect = sizes.width / sizes.height;
+	
+	// Update's the camera's Project Matrix on Resize
+	camera.updateProjectionMatrix();
+	
+	// Update the Render & Canvas with new sizes
+	renderer.setSize(sizes.width, sizes.height);
+})
 
 /**
  * Camera
  */
-// const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-const aspectRatio = sizes.width / sizes.height;
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 
-const orthCamSettings = {
-	left: -1 * aspectRatio,
-	right: 1 * aspectRatio,
-	top: 1,
-	bottom: -1,
-	near: 0.1,
-	far: 100
-}
+// # Orthographic Camera
+// const aspectRatio = sizes.width / sizes.height;
+// const orthCamSettings = {
+// 	left: -1 * aspectRatio,
+// 	right: 1 * aspectRatio,
+// 	top: 1,
+// 	bottom: -1,
+// 	near: 0.1,
+// 	far: 100
+// }
 
-const camera = new THREE.OrthographicCamera(orthCamSettings.left, orthCamSettings.right, orthCamSettings.top, orthCamSettings.bottom, orthCamSettings.near, orthCamSettings.far);
-
-
+// const camera = new THREE.OrthographicCamera(orthCamSettings.left, orthCamSettings.right, orthCamSettings.top, orthCamSettings.bottom, orthCamSettings.near, orthCamSettings.far);
 
 scene.add(camera);
 
