@@ -8,14 +8,14 @@ import gsap from 'gsap';
  */
 const cursor = {
 	x: 0,
-	y: 0
-}
-window.addEventListener('mousemove', (event) => {
+	y: 0,
+};
+window.addEventListener('mousemove', event => {
 	cursor.x = event.clientX / sizes.width - 0.5;
-	cursor.y = -( event.clientY / sizes.height - 0.5);
+	cursor.y = -(event.clientY / sizes.height - 0.5);
 
 	// console.log(`Cursor: X: ${cursor.x}, Y: ${cursor.y}`);
-})
+});
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -70,27 +70,49 @@ const sizes = {
 /**
  * Update's the Sizes on Viewport Resize
  */
-window.addEventListener('resize', (event) => {
-
+window.addEventListener('resize', () => {
 	// Update Sizes
 	sizes.width = window.innerWidth;
 	sizes.height = window.innerHeight;
 
-	
 	// Update Camera's Aspect Ratio
 	camera.aspect = sizes.width / sizes.height;
-	
-	// Update's the camera's Project Matrix on Resize
+
+	// Update's the camera's Projection Matrix on Resize
 	camera.updateProjectionMatrix();
-	
+
 	// Update the Render & Canvas with new sizes
 	renderer.setSize(sizes.width, sizes.height);
-})
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
 
+window.addEventListener('dblclick', () => {
+	const fullscreenElement =
+		document.fullscreenElement || document.webkitFullscreenElement;
+
+	if (!fullscreenElement) {
+		if (canvas.requestFullscreen) {
+			canvas.requestFullscreen();
+		} else if (canvas.webkitRequestFullscreen) {
+			canvas.webkitRequestFullscreen();
+		}
+	} else {
+		if (document.exitFullscreen) {
+			document.exitFullscreen();
+		} else if (document.webkitExitFullscreen) {
+			document.webkitExitFullscreen();
+		}
+	}
+});
 /**
  * Camera
  */
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height,
+	0.1,
+	100
+);
 
 // # Orthographic Camera
 // const aspectRatio = sizes.width / sizes.height;
@@ -122,6 +144,7 @@ const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 /**
  *  Clock
@@ -176,7 +199,7 @@ const keyframe = () => {
 	// camera.position.x = cursor.x * 10
 	// camera.position.y = cursor.y * 10
 
-	/** Update Object Controls */	
+	/** Update Object Controls */
 	controls.update();
 
 	/**
