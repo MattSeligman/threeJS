@@ -2,6 +2,14 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import gsap from 'gsap';
+import * as dat from 'dat-gui';
+
+console.log(dat);
+
+/**
+ * Debug (Dat GUI) - Top Right Panel
+ */
+const gui = new dat.GUI();
 
 /**
  * Cursor
@@ -58,6 +66,12 @@ cube3.position.set(-2, 0, 0);
 const axisDistance = 2;
 const axesHelper = new THREE.AxesHelper(axisDistance);
 scene.add(axesHelper);
+
+/**
+ * Added Menus for Debug GUI
+ * object, axis, max, min, step (precision)
+ */
+gui.add(group.position, 'y').min(-3).max(3).step(0.1).name('Group 1 - Y Axis');
 
 /**
  * Sizes
