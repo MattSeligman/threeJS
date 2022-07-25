@@ -2,14 +2,12 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import gsap from 'gsap';
-import * as dat from 'dat-gui';
-
-console.log(dat);
+import GUI from 'lil-gui';
 
 /**
  * Debug (Dat GUI) - Top Right Panel
  */
-const gui = new dat.GUI();
+const gui = new GUI({ closed: true });
 
 /**
  * Cursor
@@ -18,6 +16,7 @@ const cursor = {
 	x: 0,
 	y: 0,
 };
+
 window.addEventListener('mousemove', event => {
 	cursor.x = event.clientX / sizes.width - 0.5;
 	cursor.y = -(event.clientY / sizes.height - 0.5);
@@ -42,7 +41,7 @@ group.position.z = Math.PI * 0;
 
 const cube1 = new THREE.Mesh(
 	new THREE.BoxGeometry(1, 1, 1),
-	new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true })
+	new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
 group.add(cube1);
 
@@ -71,7 +70,48 @@ scene.add(axesHelper);
  * Added Menus for Debug GUI
  * object, axis, max, min, step (precision)
  */
+const visibilityFolder = gui.addFolder('Visibility');
+visibilityFolder.add(axesHelper, 'visible').name('Axis Visibility');
+visibilityFolder.add(group, 'visible').name('Hide Group');
+visibilityFolder.close();
+
+const wireframeFolder = gui.addFolder('Wireframe');
+wireframeFolder.add(cube1.material, 'wireframe').name('Box 1 - Wireframe');
+wireframeFolder.add(cube2.material, 'wireframe').name('Box 2 - Wireframe');
+wireframeFolder.add(cube3.material, 'wireframe').name('Box 3 - Wireframe');
+wireframeFolder.close();
+
 gui.add(group.position, 'y').min(-3).max(3).step(0.1).name('Group 1 - Y Axis');
+
+const parameters = {
+	color: 0xff0000,
+	spin: () => {
+		gsap.to(group.rotation, { y: Math.PI * 2, duration: 1 });
+	},
+};
+
+gui
+	.addColor(parameters, 'color')
+	.name('Cube 1 - Color')
+	.onChange(() => {
+		cube1.material.color.set(parameters.color);
+	});
+
+gui
+	.addColor(parameters, 'color')
+	.name('Cube 2 - Color')
+	.onChange(() => {
+		cube2.material.color.set(parameters.color);
+	});
+
+gui
+	.addColor(parameters, 'color')
+	.name('Cube 3 - Color')
+	.onChange(() => {
+		cube3.material.color.set(parameters.color);
+	});
+
+gui.add(parameters, 'spin');
 
 /**
  * Sizes
