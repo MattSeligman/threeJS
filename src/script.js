@@ -20,33 +20,39 @@ loadingManager.onError = () => {
 	console.log('Error');
 };
 const textureLoader = new THREE.TextureLoader(loadingManager);
-const colorTexture = textureLoader.load('/textures/door/color.jpg');
-// const colorTexture = textureLoader.load('/textures/minecraft.png');
-const alphaTexture = textureLoader.load('/textures/door/alpha.jpg');
-const heightTexture = textureLoader.load('/textures/door/height.jpg');
-const ambientTexture = textureLoader.load(
+const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+const doorAmbientTexture = textureLoader.load(
 	'/textures/door/ambientOcclusion.jpg'
 );
-const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
-const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+
+const matcapTexture = textureLoader.load('/textures/matcaps/7.png');
+
+const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
+gradientTexture.minFilter = THREE.NearestFilter;
+gradientTexture.magFilter = THREE.NearestFilter;
+gradientTexture.generateMipmaps = false;
 
 /**
  * UV Map Options
  */
-// colorTexture.repeat.x = 1; // Repeat Texture on X Axis
-// colorTexture.repeat.y = 2; // Repeat Texture on Y Axis
+// doorColorTexture.repeat.x = 1; // Repeat Texture on X Axis
+// doorColorTexture.repeat.y = 2; // Repeat Texture on Y Axis
 
-// colorTexture.offset.x = 0.5; // Repeat UVs on X Axis
-// colorTexture.offset.y = 0.5; // Repeat UVs on Y Axis
+// doorColorTexture.offset.x = 0.5; // Repeat UVs on X Axis
+// doorColorTexture.offset.y = 0.5; // Repeat UVs on Y Axis
 
-// colorTexture.rotation = Math.PI / 4; // Rotate UVs
+// doorColorTexture.rotation = Math.PI / 4; // Rotate UVs
 
-// colorTexture.wrapS = THREE.RepeatWrapping; // Repeat Texture
-// colorTexture.wrapT = THREE.RepeatWrapping; // Repeat Texture
+// doorColorTexture.wrapS = THREE.RepeatWrapping; // Repeat Texture
+// doorColorTexture.wrapT = THREE.RepeatWrapping; // Repeat Texture
 
-colorTexture.generateMipmaps = false;
-colorTexture.minFilter = THREE.NearestFilter;
-colorTexture.magFilter = THREE.NearestFilter;
+doorColorTexture.generateMipmaps = false;
+doorColorTexture.minFilter = THREE.NearestFilter;
+doorColorTexture.magFilter = THREE.NearestFilter;
 
 /**
  * Debug (Dat GUI) - Top Right Panel
@@ -77,6 +83,86 @@ const scene = new THREE.Scene();
 /**
  * Objects
  */
+// const material = new THREE.MeshBasicMaterial({
+// 	transparent: true,
+// 	map: doorColorTexture,
+// 	alphaMap: doorAlphaTexture,
+// });
+
+// Normal Map Materials
+// const material = new THREE.MeshNormalMaterial();
+// material.flatShading = true; // unsmooths the material
+
+// Matcap Materials
+// const material = new THREE.MeshMatcapMaterial();
+// material.matcap = matcapTexture;
+
+// const material = new THREE.MeshDepthMaterial();
+
+// const material = new THREE.MeshLambertMaterial(); // Lambert Material
+
+// const material = new THREE.MeshPhongMaterial(); // Phong Material
+// material.shininess = 100;
+// material.specular = new THREE.Color(0x1188ff); // Control the color of specularity
+
+// const material = new THREE.MeshToonMaterial(); // Toon Material
+// material.gradientMap = gradientTexture;
+
+const material = new THREE.MeshStandardMaterial();
+gui
+	.add(material, 'roughness')
+	.min(0)
+	.max(1)
+	.step(0.0001)
+	.name('Material Roughness');
+
+gui
+	.add(material, 'metalness')
+	.min(0)
+	.max(1)
+	.step(0.0001)
+	.name('Material Metalness');
+
+material.roughness = 0.15;
+material.metalness = 0.15;
+
+const point = new THREE.PointLight(0xffffff, 0.5);
+const light = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(light, point);
+
+point.position.x = 2;
+point.position.y = 3;
+point.position.z = 4;
+
+// Transparency Controls
+material.transparent = true;
+// material.opacity = 0.5;
+
+// Additional ways able to set Texture maps to the Material
+// material.map = doorColorTexture;
+
+// Additional ways able to set Colors for the Material
+// material.color.set('#ffffff');
+// material.color = new THREE.Color('#ffffff');
+// material.color = new THREE.Color('white');
+// material.color = new THREE.Color(0xff0ff);
+
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
+sphere.position.y = 3.5;
+
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), material);
+plane.position.y = 3.5;
+plane.position.x = 3.5;
+
+const torus = new THREE.Mesh(
+	new THREE.TorusGeometry(0.5, 0.2, 16, 32),
+	material
+);
+torus.position.y = 3.5;
+torus.position.x = -2.5;
+
+scene.add(sphere, plane, torus);
+
 const group = new THREE.Group();
 scene.add(group);
 
@@ -86,7 +172,7 @@ group.position.z = Math.PI * 0;
 const cube1 = new THREE.Mesh(
 	new THREE.BoxGeometry(1, 1, 1),
 	// new THREE.MeshBasicMaterial({ color: 0xff0000 }) // Color
-	new THREE.MeshBasicMaterial({ map: colorTexture }) // Texture
+	new THREE.MeshBasicMaterial({ map: doorColorTexture }) // Texture
 );
 group.add(cube1);
 
@@ -121,6 +207,7 @@ visibilityFolder.add(group, 'visible').name('Hide Group');
 visibilityFolder.close();
 
 const wireframeFolder = gui.addFolder('Wireframe');
+// wireframeFolder.add(material, 'wireframe').name('All Wireframe');
 wireframeFolder.add(cube1.material, 'wireframe').name('Box 1 - Wireframe');
 wireframeFolder.add(cube2.material, 'wireframe').name('Box 2 - Wireframe');
 wireframeFolder.add(cube3.material, 'wireframe').name('Box 3 - Wireframe');
@@ -274,6 +361,13 @@ const keyframe = () => {
 	 */
 	const elapsedTime = clock.getElapsedTime();
 
+	sphere.rotation.y = 0.1 * elapsedTime;
+	plane.rotation.y = 0.1 * elapsedTime;
+	torus.rotation.y = 0.1 * elapsedTime;
+
+	sphere.rotation.x = 0.15 * elapsedTime;
+	plane.rotation.x = 0.15 * elapsedTime;
+	torus.rotation.x = 0.15 * elapsedTime;
 	/**
 	 * Object Animation Updates
 	 */
