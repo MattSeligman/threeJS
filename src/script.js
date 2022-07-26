@@ -5,6 +5,50 @@ import gsap from 'gsap';
 import GUI from 'lil-gui';
 
 /**
+ * Textures
+ */
+const loadingManager = new THREE.LoadingManager();
+loadingManager.onStart = () => {
+	console.log('Loading...');
+};
+
+loadingManager.onProgress = () => {
+	console.log('Progress');
+};
+
+loadingManager.onError = () => {
+	console.log('Error');
+};
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load('/textures/door/color.jpg');
+// const colorTexture = textureLoader.load('/textures/minecraft.png');
+const alphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+const heightTexture = textureLoader.load('/textures/door/height.jpg');
+const ambientTexture = textureLoader.load(
+	'/textures/door/ambientOcclusion.jpg'
+);
+const metalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+const roughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+
+/**
+ * UV Map Options
+ */
+// colorTexture.repeat.x = 1; // Repeat Texture on X Axis
+// colorTexture.repeat.y = 2; // Repeat Texture on Y Axis
+
+// colorTexture.offset.x = 0.5; // Repeat UVs on X Axis
+// colorTexture.offset.y = 0.5; // Repeat UVs on Y Axis
+
+// colorTexture.rotation = Math.PI / 4; // Rotate UVs
+
+// colorTexture.wrapS = THREE.RepeatWrapping; // Repeat Texture
+// colorTexture.wrapT = THREE.RepeatWrapping; // Repeat Texture
+
+colorTexture.generateMipmaps = false;
+colorTexture.minFilter = THREE.NearestFilter;
+colorTexture.magFilter = THREE.NearestFilter;
+
+/**
  * Debug (Dat GUI) - Top Right Panel
  */
 const gui = new GUI({ closed: true });
@@ -41,7 +85,8 @@ group.position.z = Math.PI * 0;
 
 const cube1 = new THREE.Mesh(
 	new THREE.BoxGeometry(1, 1, 1),
-	new THREE.MeshBasicMaterial({ color: 0xff0000 })
+	// new THREE.MeshBasicMaterial({ color: 0xff0000 }) // Color
+	new THREE.MeshBasicMaterial({ map: colorTexture }) // Texture
 );
 group.add(cube1);
 
