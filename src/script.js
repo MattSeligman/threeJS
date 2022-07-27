@@ -210,8 +210,8 @@ plane.geometry.setAttribute(
 	new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2)
 );
 
-// plane.position.y = 3.5;
-// plane.position.x = 3.5;
+plane.position.y = 3.5;
+plane.position.x = 3.5;
 
 const torus = new THREE.Mesh(
 	new THREE.TorusGeometry(0.5, 0.2, 64, 128),
@@ -239,7 +239,7 @@ const cube1 = new THREE.Mesh(
 	// new THREE.MeshBasicMaterial({ color: 0xff0000 }) // Color
 	new THREE.MeshBasicMaterial({ map: doorColorTexture }) // Texture
 );
-// group.add(cube1);
+group.add(cube1);
 
 const cube2 = new THREE.Mesh(
 	new THREE.BoxGeometry(1, 1, 1),
