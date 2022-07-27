@@ -226,10 +226,24 @@ torus.geometry.setAttribute(
 torus.position.y = 3.5;
 torus.position.x = -2.5;
 
-scene.add(sphere, plane, torus);
-
 const group = new THREE.Group();
-scene.add(group);
+let hideObjects = {
+	hide: false,
+	checkIfHidden: () => {
+		console.log(hideObjects);
+		if (hideObjects.hide === false) {
+			scene.add(sphere, plane, torus);
+			scene.add(group);
+			hideObjects.hide = true;
+		} else if (hideObjects.hide === true) {
+			scene.remove(sphere, plane, torus);
+			scene.remove(group);
+			hideObjects.hide = false;
+		}
+
+		console.log(hideObjects);
+	},
+};
 
 group.scale.y = Math.PI * 1;
 group.position.z = Math.PI * 0;
@@ -309,6 +323,7 @@ gui
 	});
 
 gui.add(parameters, 'spin');
+gui.add(hideObjects, 'checkIfHidden');
 
 /**
  * Sizes
