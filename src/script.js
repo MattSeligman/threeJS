@@ -1,8 +1,45 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import gsap from 'gsap';
 import GUI from 'lil-gui';
+
+/**
+ * Fonts
+ */
+const fontLoader = new FontLoader();
+fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
+	console.log(`Font Loaded`);
+
+	const textGeometry = new TextGeometry(`Matt Seligman`, {
+		font: font,
+		size: 0.5,
+		height: 0.2,
+		curveSegments: 3,
+		bevelEnabled: true,
+		bevelThickness: 0.03,
+		bevelSize: 0.02,
+		bevelOffset: 0,
+		bevelSegments: 5,
+	});
+
+	// textGeometry.computeBoundingBox();
+	// textGeometry.translate(
+	// 	-(textGeometry.boundingBox.max.x - 0.02) * 0.5,
+	// 	-(textGeometry.boundingBox.max.y - 0.02) * 0.5,
+	// 	-(textGeometry.boundingBox.max.z - 0.03) * 0.5
+	// );
+	// console.log(textGeometry.boundingBox);
+	textGeometry.center();
+
+	const textMaterial = new THREE.MeshBasicMaterial({
+		wireframe: true,
+	});
+	const text = new THREE.Mesh(textGeometry, textMaterial);
+	scene.add(text);
+});
 
 /**
  * Textures
@@ -93,8 +130,9 @@ const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
 /**
- * Objects
+ * Objects Materials
  */
+
 // const material = new THREE.MeshBasicMaterial({
 // 	transparent: true,
 // 	map: doorColorTexture,
@@ -172,14 +210,6 @@ gui
 // material.roughness = 0.15;
 // material.metalness = 0.15;
 
-const point = new THREE.PointLight(0xffffff, 0.5);
-const light = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(light, point);
-
-point.position.x = 2;
-point.position.y = 0;
-point.position.z = 4;
-
 // Transparency Controls
 material.transparent = true;
 // material.opacity = 0.5;
@@ -192,6 +222,21 @@ material.transparent = true;
 // material.color = new THREE.Color('#ffffff');
 // material.color = new THREE.Color('white');
 // material.color = new THREE.Color(0xff0ff);
+
+/**
+ * Object Lighting
+ */
+const point = new THREE.PointLight(0xffffff, 0.5);
+const light = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(light, point);
+
+point.position.x = 2;
+point.position.y = 0;
+point.position.z = 4;
+
+/**
+ * Objects
+ */
 
 const sphere = new THREE.Mesh(
 	new THREE.SphereGeometry(1, 32, 64, 64),
