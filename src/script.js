@@ -7,41 +7,6 @@ import gsap from 'gsap';
 import GUI from 'lil-gui';
 
 /**
- * Fonts
- */
-const fontLoader = new FontLoader();
-fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
-	console.log(`Font Loaded`);
-
-	const textGeometry = new TextGeometry(`Matt Seligman`, {
-		font: font,
-		size: 0.5,
-		height: 0.2,
-		curveSegments: 3,
-		bevelEnabled: true,
-		bevelThickness: 0.03,
-		bevelSize: 0.02,
-		bevelOffset: 0,
-		bevelSegments: 5,
-	});
-
-	// textGeometry.computeBoundingBox();
-	// textGeometry.translate(
-	// 	-(textGeometry.boundingBox.max.x - 0.02) * 0.5,
-	// 	-(textGeometry.boundingBox.max.y - 0.02) * 0.5,
-	// 	-(textGeometry.boundingBox.max.z - 0.03) * 0.5
-	// );
-	// console.log(textGeometry.boundingBox);
-	textGeometry.center();
-
-	const textMaterial = new THREE.MeshBasicMaterial({
-		wireframe: true,
-	});
-	const text = new THREE.Mesh(textGeometry, textMaterial);
-	scene.add(text);
-});
-
-/**
  * Textures
  */
 const loadingManager = new THREE.LoadingManager();
@@ -70,7 +35,6 @@ const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
 
 const matcapTexture = textureLoader.load('/textures/matcaps/7.png');
-
 const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 gradientTexture.minFilter = THREE.NearestFilter;
 gradientTexture.magFilter = THREE.NearestFilter;
@@ -84,6 +48,42 @@ const environmentMapTexture = cubeTextureLoader.load([
 	'/textures/environmentMaps/0/pz.jpg',
 	'/textures/environmentMaps/0/nz.jpg',
 ]);
+
+/**
+ * Fonts
+ */
+const fontLoader = new FontLoader();
+fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
+	console.log(`Font Loaded`);
+
+	const textGeometry = new TextGeometry(`Matt Seligman`, {
+		font: font,
+		size: 0.5,
+		height: 0.2,
+		curveSegments: 3,
+		bevelEnabled: true,
+		bevelThickness: 0.03,
+		bevelSize: 0.02,
+		bevelOffset: 0,
+		bevelSegments: 5,
+	});
+
+	// textGeometry.computeBoundingBox();
+	// textGeometry.translate(
+	// 	-(textGeometry.boundingBox.max.x - 0.02) * 0.5,
+	// 	-(textGeometry.boundingBox.max.y - 0.02) * 0.5,
+	// 	-(textGeometry.boundingBox.max.z - 0.03) * 0.5
+	// );
+	// console.log(textGeometry.boundingBox);
+	textGeometry.center();
+
+	const textMaterial = new THREE.MeshMatcapMaterial({
+		wireframe: false,
+		matcap: matcapTexture,
+	});
+	const text = new THREE.Mesh(textGeometry, textMaterial);
+	scene.add(text);
+});
 
 /**
  * UV Map Options
