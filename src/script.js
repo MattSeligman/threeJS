@@ -347,6 +347,7 @@ scene.add(axesHelper);
  * Added Menus for Debug GUI
  * object, axis, max, min, step (precision)
  */
+gui.close();
 const visibilityFolder = gui.addFolder('Visibility');
 visibilityFolder.add(axesHelper, 'visible').name('Axis Visibility');
 visibilityFolder.add(group, 'visible').name('Hide Group');
