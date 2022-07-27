@@ -35,6 +35,7 @@ const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
 
 const matcapTexture = textureLoader.load('/textures/matcaps/7.png');
+const donutMatcapTexture = textureLoader.load('/textures/matcaps/4.png');
 const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 gradientTexture.minFilter = THREE.NearestFilter;
 gradientTexture.magFilter = THREE.NearestFilter;
@@ -78,11 +79,31 @@ fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
 	textGeometry.center();
 
 	const textMaterial = new THREE.MeshMatcapMaterial({
-		wireframe: false,
 		matcap: matcapTexture,
 	});
 	const text = new THREE.Mesh(textGeometry, textMaterial);
 	scene.add(text);
+
+	console.time('donuts');
+	const donutGeometry = new THREE.TorusBufferGeometry(0.3, 0.2, 200, 45);
+	const donutMaterial = new THREE.MeshMatcapMaterial({
+		matcap: donutMatcapTexture,
+	});
+	for (let i = 0; i < 100; i++) {
+		const donut = new THREE.Mesh(donutGeometry, donutMaterial);
+		donut.position.x = (Math.random() - 0.5) * 10;
+		donut.position.y = (Math.random() - 0.5) * 10;
+		donut.position.z = (Math.random() - 0.5) * 10;
+
+		donut.rotation.x = Math.random() * Math.PI;
+		donut.rotation.z = Math.random() * Math.PI;
+
+		const donutScale = Math.random();
+		donut.scale.set(donutScale, donutScale, donutScale);
+
+		scene.add(donut);
+	}
+	console.timeEnd('donuts');
 });
 
 /**
