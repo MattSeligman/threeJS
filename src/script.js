@@ -20,6 +20,8 @@ loadingManager.onError = () => {
 	console.log('Error');
 };
 const textureLoader = new THREE.TextureLoader(loadingManager);
+const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager);
+
 const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
 const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
@@ -28,6 +30,7 @@ const doorAmbientTexture = textureLoader.load(
 );
 const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
 
 const matcapTexture = textureLoader.load('/textures/matcaps/7.png');
 
@@ -35,6 +38,15 @@ const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 gradientTexture.minFilter = THREE.NearestFilter;
 gradientTexture.magFilter = THREE.NearestFilter;
 gradientTexture.generateMipmaps = false;
+
+const environmentMapTexture = cubeTextureLoader.load([
+	'/textures/environmentMaps/0/px.jpg',
+	'/textures/environmentMaps/0/nx.jpg',
+	'/textures/environmentMaps/0/py.jpg',
+	'/textures/environmentMaps/0/ny.jpg',
+	'/textures/environmentMaps/0/pz.jpg',
+	'/textures/environmentMaps/0/nz.jpg',
+]);
 
 /**
  * UV Map Options
@@ -108,7 +120,34 @@ const scene = new THREE.Scene();
 // const material = new THREE.MeshToonMaterial(); // Toon Material
 // material.gradientMap = gradientTexture;
 
-const material = new THREE.MeshStandardMaterial();
+// const material = new THREE.MeshStandardMaterial({
+// 	transparent: true,
+// 	map: doorColorTexture,
+// 	alphaMap: doorAlphaTexture,
+// 	aoMap: doorAmbientTexture,
+// 	aoMapIntensity: 1,
+// 	displacementMap: doorHeightTexture,
+// 	displacementScale: 0.3,
+// 	metalnessMap: doorMetalnessTexture,
+// 	roughnessMap: doorRoughnessTexture,
+// 	normalMap: doorNormalTexture,
+// });
+
+const material = new THREE.MeshStandardMaterial({
+	metalness: 0.7,
+	roughness: 0.2,
+	envMap: environmentMapTexture,
+});
+
+material.normalScale.set(0.5, 0.5);
+
+gui
+	.add(material, 'displacementScale')
+	.min(0)
+	.max(1)
+	.step(0.0001)
+	.name('Displacement Scale');
+
 gui
 	.add(material, 'roughness')
 	.min(0)
@@ -123,15 +162,22 @@ gui
 	.step(0.0001)
 	.name('Material Metalness');
 
-material.roughness = 0.15;
-material.metalness = 0.15;
+gui
+	.add(material, 'aoMapIntensity')
+	.min(0)
+	.max(10)
+	.step(0.0001)
+	.name('Ambient Occlusion Intensity');
+
+// material.roughness = 0.15;
+// material.metalness = 0.15;
 
 const point = new THREE.PointLight(0xffffff, 0.5);
 const light = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(light, point);
 
 point.position.x = 2;
-point.position.y = 3;
+point.position.y = 0;
 point.position.z = 4;
 
 // Transparency Controls
@@ -147,17 +193,36 @@ material.transparent = true;
 // material.color = new THREE.Color('white');
 // material.color = new THREE.Color(0xff0ff);
 
-const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material);
-sphere.position.y = 3.5;
-
-const plane = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), material);
-plane.position.y = 3.5;
-plane.position.x = 3.5;
-
-const torus = new THREE.Mesh(
-	new THREE.TorusGeometry(0.5, 0.2, 16, 32),
+const sphere = new THREE.Mesh(
+	new THREE.SphereGeometry(1, 32, 64, 64),
 	material
 );
+// Ambient
+sphere.geometry.setAttribute(
+	'uv2',
+	new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2)
+);
+sphere.position.y = 3.5;
+
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(3, 3, 100, 100), material);
+plane.geometry.setAttribute(
+	'uv2',
+	new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2)
+);
+
+// plane.position.y = 3.5;
+// plane.position.x = 3.5;
+
+const torus = new THREE.Mesh(
+	new THREE.TorusGeometry(0.5, 0.2, 64, 128),
+	material
+);
+
+torus.geometry.setAttribute(
+	'uv2',
+	new THREE.BufferAttribute(torus.geometry.attributes.uv.array, 2)
+);
+
 torus.position.y = 3.5;
 torus.position.x = -2.5;
 
@@ -174,7 +239,7 @@ const cube1 = new THREE.Mesh(
 	// new THREE.MeshBasicMaterial({ color: 0xff0000 }) // Color
 	new THREE.MeshBasicMaterial({ map: doorColorTexture }) // Texture
 );
-group.add(cube1);
+// group.add(cube1);
 
 const cube2 = new THREE.Mesh(
 	new THREE.BoxGeometry(1, 1, 1),
