@@ -83,6 +83,7 @@ fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
 		matcap: matcapTexture,
 	});
 	const text = new THREE.Mesh(textGeometry, textMaterial);
+	text.castShadow = true;
 	scene.add(text);
 
 	console.time('donuts');
@@ -102,7 +103,7 @@ fontLoader.load('/fonts/helvetiker_regular.typeface.json', font => {
 
 		const donutScale = Math.random();
 		donut.scale.set(donutScale, donutScale, donutScale);
-
+		donut.castShadow = true;
 		scene.add(donut);
 	}
 	console.timeEnd('donuts');
@@ -195,9 +196,9 @@ const scene = new THREE.Scene();
 // });
 
 const material = new THREE.MeshStandardMaterial({
-	metalness: 0.7,
+	// metalness: 0.7,
 	roughness: 0.2,
-	envMap: environmentMapTexture,
+	// envMap: environmentMapTexture,
 });
 
 material.normalScale.set(0.5, 0.5);
@@ -247,6 +248,10 @@ material.transparent = true;
 // material.color = new THREE.Color(0xff0ff);
 
 /**
+ * Shadows
+ */
+
+/**
  * Object Lighting
  */
 
@@ -255,15 +260,27 @@ scene.add(ambientLight);
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight.position.set(1, 0.25, 0);
+directionalLight.position.set(1, 3, 4);
+directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 1024;
+directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.camera.top = 2;
+directionalLight.shadow.camera.right = 2;
+directionalLight.shadow.camera.bottom = -2;
+directionalLight.shadow.camera.left = -2;
+directionalLight.shadow.camera.far = 6;
+directionalLight.shadow.camera.near = 1;
+// scene.add(directionalLight);
 
 const hemisphereLight = new THREE.HemisphereLight(0xff000, 0x0000ff, 0.3);
-scene.add(hemisphereLight);
 hemisphereLight.position.set(1, 0.25, 0);
+hemisphereLight.castShadow = true;
+scene.add(hemisphereLight);
 
 const pointLight = new THREE.PointLight(0xff9000, 0.5);
-scene.add(pointLight);
 pointLight.position.set(1, -0.5, 1);
+pointLight.castShadow = true;
+scene.add(pointLight);
 
 const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 2, 1, 1);
 rectAreaLight.position.set(-0.5, 0, 1.5);
@@ -278,10 +295,16 @@ const spotLight = new THREE.SpotLight(
 	0.25,
 	1
 );
-spotLight.position.set(0, 2, 3);
+
+spotLight.position.set(0, 2, 5);
+spotLight.position.set(2, 2, 5);
+spotLight.castShadow = true;
+
+const spotLightCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+scene.add(spotLightCameraHelper);
 scene.add(spotLight);
 
-spotLight.target.position.x = 7;
+spotLight.target.position.x = 0;
 scene.add(spotLight.target);
 
 // Helpers
@@ -326,6 +349,19 @@ const sphere = new THREE.Mesh(
 	new THREE.SphereGeometry(1, 32, 64, 64),
 	material
 );
+const sphere2 = new THREE.Mesh(
+	new THREE.SphereGeometry(1, 32, 64, 64),
+	material
+);
+
+sphere2.position.x = 2;
+sphere2.position.y = 0;
+sphere2.position.z = -3;
+
+sphere.castShadow = true;
+
+scene.add(sphere2);
+
 // Ambient
 sphere.geometry.setAttribute(
 	'uv2',
@@ -363,7 +399,10 @@ groundPlane.position.set(0, -1, 0);
 groundPlane.rotation.set(-1.5, 0, 0);
 scene.add(groundPlane);
 
+groundPlane.receiveShadow = true;
+
 const group = new THREE.Group();
+
 let hideObjects = {
 	hide: false,
 	checkIfHidden: () => {
@@ -488,6 +527,7 @@ window.addEventListener('resize', () => {
 	// Update the Render & Canvas with new sizes
 	renderer.setSize(sizes.width, sizes.height);
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+	renderer.shadowMap.enabled = true; // Enable Shadows
 });
 
 window.addEventListener('dblclick', () => {
