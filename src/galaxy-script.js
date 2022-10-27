@@ -22,8 +22,9 @@ const scene = new THREE.Scene();
  */
 
 const parameters = {
-	count: 1000,
+	count: 100000,
 	size: 0.01,
+	radius: 5,
 };
 
 let geometry = null;
@@ -83,6 +84,7 @@ generateGalaxy();
 
 gui.add(parameters, 'count').min(100).max(100000).step(100).onFinishChange(generateGalaxy);
 gui.add(parameters, 'size').min(0.01).max(0.1).step(0.001).onFinishChange(generateGalaxy);
+gui.add(parameters, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGalaxy);
 
 /**
  * Sizes
