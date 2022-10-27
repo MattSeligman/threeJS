@@ -27,6 +27,8 @@ const parameters = {
 	radius: 5,
 	branches: 3,
 	spin: 1,
+	randomness: 0.2,
+	randomnessPower: 3,
 };
 
 let geometry = null;
@@ -54,9 +56,13 @@ const generateGalaxy = () => {
 		const spinAngle = radius * parameters.spin;
 		const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
-		positions[i3] = Math.cos(branchAngle + spinAngle) * radius; // Y
-		positions[i3 + 1] = 0;
-		positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius; // Z
+		const randomX = Math.pow(Math.random(), parameters.randomness) * (Math.random() < 0.5 ? 1 : -1); // randomX number between -1 and 1
+		const randomY = Math.pow(Math.random(), parameters.randomness) * (Math.random() < 0.5 ? 1 : -1); // randomY number between -1 and 1
+		const randomZ = Math.pow(Math.random(), parameters.randomness) * (Math.random() < 0.5 ? 1 : -1); // randomZ number between -1 and 1
+
+		positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX; // X
+		positions[i3 + 1] = randomY; // Y
+		positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ; // Z
 	}
 
 	geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -93,6 +99,8 @@ gui.add(parameters, 'size').min(0.01).max(0.1).step(0.001).onFinishChange(genera
 gui.add(parameters, 'radius').min(0.01).max(20).step(0.01).onFinishChange(generateGalaxy);
 gui.add(parameters, 'branches').min(2).max(20).step(1).onFinishChange(generateGalaxy);
 gui.add(parameters, 'spin').min(-5).max(5).step(0.001).onFinishChange(generateGalaxy);
+gui.add(parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(generateGalaxy);
+gui.add(parameters, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(generateGalaxy);
 
 /**
  * Sizes
