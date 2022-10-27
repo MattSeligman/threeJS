@@ -48,9 +48,11 @@ const generateGalaxy = () => {
 	for (let i = 0; i < parameters.count; i++) {
 		const i3 = i * 3;
 
-		positions[i3] = (Math.random() - 0.5) * 3; // x
-		positions[i3 + 1] = (Math.random() - 0.5) * 3; // y
-		positions[i3 + 2] = (Math.random() - 0.5) * 3; // z
+		const radius = Math.random() * parameters.radius;
+
+		positions[i3] = radius;
+		positions[i3 + 1] = 0; // y
+		positions[i3 + 2] = 0; // z
 	}
 
 	geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
